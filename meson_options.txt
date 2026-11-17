@@ -1,0 +1,4 @@
+option('appindicator',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build the optional tray icon with Ayatana AppIndicator')

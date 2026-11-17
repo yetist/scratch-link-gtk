@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Scratch Link
+GenericName=Bluetooth LE bridge for Scratch
+Comment=Connect Scratch to Bluetooth LE peripherals
+Exec=scratch-link
+Icon=org.scratchlink.Gtk
+Terminal=false
+Categories=Utility;
+Keywords=Scratch;Bluetooth;BLE;micro:bit;LEGO;WeDo;
+StartupNotify=true
+StartupWMClass=org.scratchlink.Gtk

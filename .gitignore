@@ -1,0 +1,21 @@
+# Meson / Ninja
+build/
+builddir/
+subprojects/packagecache/
+*.o
+*.a
+*.so
+
+# Vala
+*.vapi.generated
+*.c~
+
+# Editor and OS noise
+*~
+.*.swp
+.directory
+compile_commands.json
+
+# Python helper scripts
+__pycache__/
+*.pyc

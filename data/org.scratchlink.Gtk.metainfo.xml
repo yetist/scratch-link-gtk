@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AppStream metadata for Scratch Link for Linux.
+
+  Copyright (C) 2026 The scratch-link-gtk authors
+  SPDX-License-Identifier: CC0-1.0
+-->
+<component type="desktop-application">
+  <id>org.scratchlink.Gtk</id>
+  <name>Scratch Link</name>
+  <summary>Connect Scratch to Bluetooth LE peripherals</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <description>
+    <p>
+      Scratch Link runs a small local WebSocket server that lets Scratch talk to
+      Bluetooth LE and Bluetooth Classic (RFCOMM) devices such as micro:bit,
+      LEGO BOOST, LEGO WeDo 2.0 and other serial or GATT peripherals. It talks
+      to BlueZ over D-Bus, so no extra capabilities, certificates or hosts-file
+      changes are required.
+    </p>
+    <p>
+      The service listens on the loopback interface by default and speaks the
+      Scratch Link network protocol, which is also used by the official macOS and
+      Windows applications.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">org.scratchlink.Gtk.desktop</launchable>
+
+  <developer id="org.scratchlink">
+    <name>The scratch-link-gtk authors</name>
+  </developer>
+
+  <provides>
+    <binary>scratch-link</binary>
+  </provides>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <keywords>
+    <keyword>Scratch</keyword>
+    <keyword>Bluetooth</keyword>
+    <keyword>BLE</keyword>
+    <keyword>micro:bit</keyword>
+    <keyword>LEGO</keyword>
+  </keywords>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="0.1.0" date="2026-11-15">
+      <description>
+        <p>First release: BLE discovery, GATT read/write, notifications and
+        disconnect handling.</p>
+      </description>
+    </release>
+  </releases>
+</component>

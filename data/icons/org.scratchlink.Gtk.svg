@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Scratch Link for Linux — placeholder icon. SPDX-License-Identifier: GPL-3.0-or-later -->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect x="4" y="4" width="120" height="120" rx="26" ry="26" fill="#FFAB19"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round">
+    <path d="M46 46a20 20 0 0 1 28 0l12 12"/>
+    <path d="M82 82a20 20 0 0 1-28 0L42 70"/>
+    <path d="M52 76l24-24"/>
+  </g>
+</svg>
