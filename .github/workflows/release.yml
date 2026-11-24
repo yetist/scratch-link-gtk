@@ -46,11 +46,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-        with:
-          bundle: scratch-link-gtk.flatpak
-          manifest-path: packaging/flatpak/org.scratchlink.Gtk.yml
-          cache-key: release-flatpak-${{ github.ref_name }}
+      - name: Build bundle
+        run: |
+          flatpak-builder --repo=repo --force-clean --disable-rofiles-fuse \
+            build-flatpak packaging/flatpak/org.scratchlink.Gtk.yml
+          flatpak build-bundle repo scratch-link-gtk.flatpak \
+            org.scratchlink.Gtk master
 
       - name: Attach bundle to release
         uses: softprops/action-gh-release@v2
@@ -70,6 +71,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Trust the checked-out repository
+        run: git config --global --add safe.directory '*'
 
       - name: Install build dependencies
         run: |
