@@ -55,7 +55,7 @@ jobs:
       - name: Install dependencies
         run: |
           dnf install -y \
-            meson ninja-build vala gcc \
+            meson ninja-build vala gcc git \
             glib2-devel gtk3-devel libsoup3-devel json-glib-devel \
             libayatana-appindicator-gtk3-devel \
             appstream desktop-file-utils
