@@ -62,6 +62,11 @@ jobs:
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
+      # actions/checkout needs git to create a real repository; meson dist
+      # later requires that repository.
+      - name: Install git for checkout
+        run: dnf install -y git
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0

@@ -50,6 +50,11 @@ jobs:
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
+      # actions/checkout falls back to a source archive when git is missing,
+      # which leaves no .git directory for meson dist. Install it first.
+      - name: Install git for checkout
+        run: dnf install -y git
+
       - uses: actions/checkout@v4
 
       - name: Install dependencies
