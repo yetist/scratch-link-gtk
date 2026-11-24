@@ -1,0 +1,35 @@
+Source: scratch-link-gtk
+Section: net
+Priority: optional
+Maintainer: Xiaotian Wu <yetist@gmail.com>
+Build-Depends: debhelper-compat (= 13),
+               meson (>= 0.59),
+               ninja-build,
+               pkg-config,
+               valac (>= 0.48),
+               pkg-config,
+               libglib2.0-dev (>= 2.66),
+               libgtk-3-dev (>= 3.24),
+               libsoup-3.0-dev,
+               libjson-glib-dev,
+               libayatana-appindicator3-dev
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://github.com/yetist/scratch-link-gtk
+Vcs-Git: https://github.com/yetist/scratch-link-gtk.git
+Vcs-Browser: https://github.com/yetist/scratch-link-gtk
+
+Package: scratch-link
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, bluez
+Recommends: libayatana-appindicator3-1
+Suggests: scratch
+Description: local Bluetooth bridge between Scratch and peripherals
+ Scratch Link runs a small WebSocket server that lets Scratch talk to
+ Bluetooth LE and Bluetooth Classic (RFCOMM) devices such as micro:bit,
+ LEGO BOOST and LEGO WeDo 2.0. It implements the Scratch Link network
+ protocol and accesses BlueZ over D-Bus, so it needs no extra capabilities,
+ certificates or hosts-file changes.
+ .
+ The package includes a GTK status window, a tray icon when AppIndicator is
+ available, and a systemd user service for headless operation.

@@ -1,5 +1,6 @@
 [Unit]
-Description=Scratch Link Bluetooth LE bridge
+Description=Scratch Link Bluetooth bridge
+Documentation=man:scratch-link(1)
 
 [Service]
 Type=simple

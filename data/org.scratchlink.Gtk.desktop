@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=Scratch Link
-GenericName=Bluetooth LE bridge for Scratch
-Comment=Connect Scratch to Bluetooth LE peripherals
+GenericName=Bluetooth bridge for Scratch
+Comment=Connect Scratch to Bluetooth LE and Classic peripherals
 Exec=scratch-link
 Icon=org.scratchlink.Gtk
 Terminal=false

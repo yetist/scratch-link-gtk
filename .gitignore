@@ -19,3 +19,21 @@ compile_commands.json
 # Python helper scripts
 __pycache__/
 *.pyc
+
+# Packaging artifacts
+/build-flatpak/
+/.flatpak-builder/
+/flatpak-build/
+/install-root/
+/repo/
+/artifacts/
+/*.flatpak
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/*.substvars
+/debian/tmp/
+/debian/scratch-link/
+/packaging/arch/src/
+/packaging/arch/pkg/
+/packaging/arch/*.pkg.tar.*

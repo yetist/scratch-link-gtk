@@ -1,0 +1,46 @@
+app-id: org.scratchlink.Gtk
+runtime: org.gnome.Platform
+runtime-version: '49'
+sdk: org.gnome.Sdk
+command: scratch-link
+
+finish-args:
+  # The WebSocket server listens on 127.0.0.1:20111 and Scratch connects to it
+  # from the host browser, so the sandbox must share the host network.
+  - --share=network
+  # BlueZ runs on the system bus. AF_BLUETOOTH sockets are needed for RFCOMM.
+  - --allow=bluetooth
+  - --system-talk-name=org.bluez
+  # GTK 3 GUI.
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /share/man
+  - /share/vala
+  - '*.a'
+  - '*.la'
+
+modules:
+  - name: scratch-link-gtk
+    buildsystem: meson
+    config-opts:
+      - --buildtype=release
+      - -Dappindicator=disabled
+      - -Dsystemd=false
+    sources:
+      # Local build from the checkout that contains this manifest.  For a
+      # Flathub submission replace this with the release archive and its
+      # sha256; see packaging/README.md.
+      - type: dir
+        path: ../..
+        skip:
+          - .git
+          - .flatpak-builder
+          - build
+          - build-flatpak
+          - install-root

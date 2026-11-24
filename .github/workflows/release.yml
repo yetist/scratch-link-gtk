@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  source:
+    name: Source tarball
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build valac gcc git \
+            libglib2.0-dev libgtk-3-dev libsoup-3.0-dev libjson-glib-dev
+
+      - name: Create tarball
+        run: |
+          meson setup build --buildtype=release
+          meson dist -C build --no-tests
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            build/meson-dist/*.tar.xz
+            build/meson-dist/*.sha256sum
+
+  flatpak:
+    name: Flatpak bundle
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: scratch-link-gtk.flatpak
+          manifest-path: packaging/flatpak/org.scratchlink.Gtk.yml
+          cache-key: release-flatpak-${{ github.ref_name }}
+
+      - name: Attach bundle to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: scratch-link-gtk.flatpak
+
+  rpm:
+    name: RPM packages
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          dnf install -y rpm-build rpmdevtools meson ninja-build vala gcc git \
+            glib2-devel gtk3-devel libsoup3-devel json-glib-devel \
+            libayatana-appindicator-gtk3-devel systemd-rpm-macros
+
+      - name: Build RPM and SRPM
+        run: |
+          rpmdev-setuptree
+          meson setup build --buildtype=release
+          meson dist -C build --no-tests
+          cp build/meson-dist/scratch-link-gtk-*.tar.xz ~/rpmbuild/SOURCES/
+          cp packaging/rpm/scratch-link-gtk.spec ~/rpmbuild/SPECS/
+          rpmbuild -ba ~/rpmbuild/SPECS/scratch-link-gtk.spec
+          mkdir -p artifacts
+          cp ~/rpmbuild/RPMS/*/*.rpm ~/rpmbuild/SRPMS/*.rpm artifacts/
+
+      - name: Attach packages to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.rpm

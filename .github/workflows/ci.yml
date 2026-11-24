@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build and test (Ubuntu)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            meson ninja-build valac gcc \
+            libglib2.0-dev libgtk-3-dev libsoup-3.0-dev libjson-glib-dev \
+            libayatana-appindicator3-dev \
+            appstream desktop-file-utils
+
+      - name: Configure
+        run: meson setup build --buildtype=release --prefix=/usr
+
+      - name: Build
+        run: meson compile -C build
+
+      - name: Test
+        run: meson test -C build --print-errorlogs
+
+      - name: Validate desktop file and AppStream metadata
+        run: |
+          desktop-file-validate data/org.scratchlink.Gtk.desktop
+          appstreamcli validate --no-net data/org.scratchlink.Gtk.metainfo.xml
+
+      - name: Check source tarball
+        run: meson dist -C build --no-tests
+
+      - name: Check install tree
+        run: |
+          DESTDIR="$PWD/install-root" meson install -C build
+          test -x install-root/usr/bin/scratch-link
+          test -f install-root/usr/share/man/man1/scratch-link.1
+          test -f install-root/usr/lib/systemd/user/scratch-link.service
+
+  fedora:
+    name: Build and test (Fedora)
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          dnf install -y \
+            meson ninja-build vala gcc \
+            glib2-devel gtk3-devel libsoup3-devel json-glib-devel \
+            libayatana-appindicator-gtk3-devel \
+            appstream desktop-file-utils
+
+      - name: Configure, build and test
+        run: |
+          meson setup build --buildtype=release --prefix=/usr
+          meson compile -C build
+          meson test -C build --print-errorlogs
+
+      - name: Validate metadata
+        run: |
+          desktop-file-validate data/org.scratchlink.Gtk.desktop
+          appstreamcli validate --no-net data/org.scratchlink.Gtk.metainfo.xml
+
+      - name: Build RPM package
+        run: |
+          dnf install -y rpm-build rpmdevtools systemd-rpm-macros
+          rpmdev-setuptree
+          meson dist -C build --no-tests
+          cp build/meson-dist/scratch-link-gtk-*.tar.xz ~/rpmbuild/SOURCES/
+          cp packaging/rpm/scratch-link-gtk.spec ~/rpmbuild/SPECS/
+          rpmbuild -ba ~/rpmbuild/SPECS/scratch-link-gtk.spec
+
+  debian:
+    name: Debian package
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential debhelper fakeroot dpkg-dev \
+            meson ninja-build valac \
+            libglib2.0-dev libgtk-3-dev libsoup-3.0-dev libjson-glib-dev \
+            libayatana-appindicator3-dev
+
+      - name: Build package
+        run: dpkg-buildpackage -b -uc -us
+
+      - name: Inspect package
+        run: |
+          dpkg-deb --info ../scratch-link_*.deb
+          dpkg-deb --contents ../scratch-link_*.deb
+
+  flatpak:
+    name: Build Flatpak bundle
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: scratch-link-gtk.flatpak
+          manifest-path: packaging/flatpak/org.scratchlink.Gtk.yml
+          cache-key: flatpak-builder-${{ github.sha }}

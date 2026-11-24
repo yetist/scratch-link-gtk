@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+scratch-link --version
+scratch-link --help > /dev/null

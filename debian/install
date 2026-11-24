@@ -1,0 +1,6 @@
+usr/bin/scratch-link
+usr/lib/systemd/user/scratch-link.service
+usr/share/applications/org.scratchlink.Gtk.desktop
+usr/share/icons/hicolor/scalable/apps/org.scratchlink.Gtk.svg
+usr/share/man/man1/scratch-link.1
+usr/share/metainfo/org.scratchlink.Gtk.metainfo.xml

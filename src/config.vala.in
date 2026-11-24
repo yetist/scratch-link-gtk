@@ -1,0 +1,15 @@
+/*
+ * scratch-link-gtk — build-time constants.
+ *
+ * Copyright (C) 2026 The scratch-link-gtk authors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ *
+ * This file is processed by Meson; the version comes from project() in the
+ * top-level meson.build.
+ */
+
+namespace ScratchLink {
+    public const string VERSION = "@VERSION@";
+    public const string APP_ID = "@APP_ID@";
+    public const string PROTOCOL_VERSION = "@PROTOCOL_VERSION@";
+}

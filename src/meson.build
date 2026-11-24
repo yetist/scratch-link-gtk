@@ -1,5 +1,4 @@
 sources = files(
-  'config.vala',
   'main.vala',
   'settings.vala',
   'application.vala',
@@ -25,6 +24,12 @@ sources = files(
   'ui/preferences-dialog.vala',
   'util/log.vala',
   'util/async-waiter.vala',
+)
+
+sources += configure_file(
+  input: 'config.vala.in',
+  output: 'config.vala',
+  configuration: app_conf,
 )
 
 # The tray icon is optional: distributions without AppIndicator (or builds
@@ -90,7 +95,6 @@ executable('scratch-link',
   dependencies: deps,
   vala_args: vala_flags,
   c_args: c_warning_flags,
-  link_args: ['-lbluetooth'],
   install: true)
 
 test_json_rpc = executable('test-json-rpc',
@@ -120,3 +124,11 @@ test_ble = executable('test-ble',
   c_args: c_warning_flags)
 
 test('ble', test_ble)
+
+test_rfcomm = executable('test-rfcomm',
+  ['tests/test-rfcomm.c', 'bt/rfcomm.c'],
+  dependencies: [dependency('gio-2.0')],
+  include_directories: include_directories('.'),
+  c_args: c_warning_flags)
+
+test('rfcomm', test_rfcomm)

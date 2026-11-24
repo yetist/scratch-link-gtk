@@ -3,7 +3,9 @@
 在 Linux 桌面上把 Scratch 3 与蓝牙外设连接起来的本地服务，使用 Vala + GTK 3 编写。
 协议与官方 Scratch Link 2.x 兼容，通过 `ws://127.0.0.1:20111/scratch/ble` 与
 `ws://127.0.0.1:20111/scratch/bt` 提供 BLE 与 Bluetooth Classic（RFCOMM）会话，
-外设访问通过 BlueZ 的 D-Bus API 与 libbluetooth，无需 `setcap`、无需修改 NSS 数据库或 `/etc/hosts`。
+外设访问通过 BlueZ 的 D-Bus API 与 Linux 原生 RFCOMM socket，无需 `setcap`、无需修改 NSS 数据库或 `/etc/hosts`。
+
+![Scratch Link 主窗口](data/screenshots/main-window.png)
 
 ## 依赖
 
@@ -13,15 +15,13 @@
 - json-glib 1.0
 - Vala 0.48+ 与 Meson 0.59+（仅构建时需要）
 - BlueZ（`bluetoothd`）在系统总线上运行
-- libbluetooth（`libbluetooth-dev` / `bluez-libs-devel`），用于 Bluetooth Classic / RFCOMM
 - 可选：libayatana-appindicator3（托盘图标）
 
 Debian / Ubuntu：
 
 ```sh
 sudo apt install build-essential meson ninja-build valac \
-    libgtk-3-dev libglib2.0-dev libsoup-3.0-dev libjson-glib-dev \
-    libbluetooth-dev
+    libgtk-3-dev libglib2.0-dev libsoup-3.0-dev libjson-glib-dev
 # 可选：托盘图标
 sudo apt install libayatana-appindicator3-dev
 ```
@@ -30,7 +30,7 @@ Fedora：
 
 ```sh
 sudo dnf install gcc meson ninja-build vala gtk3-devel glib2-devel \
-    libsoup3-devel json-glib-devel bluez-libs-devel
+    libsoup3-devel json-glib-devel
 # 可选：托盘图标
 sudo dnf install libayatana-appindicator-gtk3-devel
 ```
@@ -38,7 +38,7 @@ sudo dnf install libayatana-appindicator-gtk3-devel
 ## 构建
 
 ```sh
-meson setup build --prefix=/usr
+meson setup build --prefix=/usr --buildtype=release
 ninja -C build
 meson test -C build
 ```
@@ -55,9 +55,24 @@ sudo meson install -C build
 | --- | --- |
 | `$(prefix)/bin/scratch-link` | 可执行文件 |
 | `$(prefix)/lib/systemd/user/scratch-link.service` | systemd 用户服务（未自动启用） |
+| `$(mandir)/man1/scratch-link.1` | Man page |
 | `$(datadir)/applications/org.scratchlink.Gtk.desktop` | 桌面入口 |
 | `$(datadir)/icons/hicolor/scalable/apps/org.scratchlink.Gtk.svg` | 图标 |
 | `$(datadir)/metainfo/org.scratchlink.Gtk.metainfo.xml` | AppStream 元数据 |
+
+不需要 systemd 用户单元时（例如 Flatpak 或容器镜像），配置
+`meson setup build -Dsystemd=false`。
+
+## 打包
+
+Flatpak 清单、RPM spec、Arch `PKGBUILD`、Debian 打包文件和发布流程见
+[packaging/README.md](packaging/README.md)。Flatpak 单文件 bundle、源码包和
+RPM 由标签发布工作流自动生成。安装 release 页提供的 bundle：
+
+```sh
+flatpak install --user scratch-link-gtk.flatpak
+flatpak run org.scratchlink.Gtk
+```
 
 ## 运行
 

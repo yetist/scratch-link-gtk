@@ -1,0 +1,32 @@
+# Maintainer: Xiaotian Wu <yetist@gmail.com>
+pkgname=scratch-link-gtk
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Local WebSocket bridge between Scratch and Bluetooth LE/Classic peripherals'
+arch=('x86_64' 'aarch64')
+url='https://github.com/yetist/scratch-link-gtk'
+license=('GPL-3.0-or-later')
+depends=('gtk3' 'glib2' 'libsoup3' 'json-glib' 'bluez')
+optdepends=('libayatana-appindicator: tray icon')
+makedepends=('meson' 'ninja' 'vala' 'git')
+provides=('scratch-link')
+conflicts=('scratch-link')
+source=("$pkgname::git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+build() {
+  meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dappindicator=auto
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}

@@ -1,0 +1,91 @@
+.TH SCRATCH-LINK 1 "2026-11-24" "scratch-link-gtk" "User Commands"
+.SH NAME
+scratch-link \- local WebSocket bridge between Scratch and Bluetooth peripherals
+.SH SYNOPSIS
+.B scratch-link
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B scratch-link
+runs a small local WebSocket server that implements the Scratch Link network
+protocol.  Scratch connects to it on
+\fBws://127.0.0.1:20111/scratch/ble\fR for Bluetooth LE extensions and on
+\fBws://127.0.0.1:20111/scratch/bt\fR for Bluetooth Classic (RFCOMM)
+extensions.
+.PP
+Bluetooth access goes through BlueZ on the system D-Bus bus; no extra
+capabilities, NSS database changes or hosts-file entries are required.
+.PP
+When a display server is available the program opens a status window with
+the adapter state, recently discovered devices and a log.  Without a display,
+or when \fB\-\-headless\fR is given, it runs without a user interface and is
+suitable for a systemd user service.
+.SH OPTIONS
+.TP
+.B \-\-port=\fIPORT\fR
+Listen on \fIPORT\fR instead of 20111.
+.TP
+.B \-\-listen\-address=\fIADDRESS\fR
+Bind to \fIADDRESS\fR instead of 127.0.0.1.  The default keeps the service
+reachable only from the local machine; binding to 0.0.0.0 or :: lets any host
+that can reach the port control connected Bluetooth devices.
+.TP
+.B \-\-adapter=\fINAME\fR
+Use the BlueZ adapter named \fINAME\fR (for example hci0).  The name is
+matched against both the adapter Name and Alias properties.
+.TP
+.B \-\-min\-rssi=\fIDBM\fR
+Do not report peripherals weaker than \fIDBM\fR (default \-90).
+.TP
+.B \-\-headless
+Do not create a graphical interface.
+.TP
+.B \-\-verbose, \-v
+Enable verbose protocol and Bluetooth logging.
+.TP
+.B \-\-version, \-V
+Print the program version and protocol version, then exit.
+.TP
+.B \-\-help, \-h
+Show the command line summary and exit.
+.SH FILES
+.TP
+.I ~/.config/scratch-link/settings.ini
+Per-user settings written by the preferences dialog.  Command line options
+take precedence over this file for the current run.
+.SH ENVIRONMENT
+.TP
+.B DISPLAY, WAYLAND_DISPLAY
+When neither is set, the program falls back to headless mode.
+.SH EXAMPLES
+Run the graphical application:
+.PP
+.RS 4
+scratch-link
+.RE
+.PP
+Run as a background service on a non-default adapter:
+.PP
+.RS 4
+scratch-link \-\-headless \-\-adapter=hci1
+.RE
+.PP
+Inspect protocol traffic while connecting a micro:bit:
+.PP
+.RS 4
+scratch-link \-v
+.RE
+.SH NOTES
+Scratch's micro:bit extension requires the Scratch-specific micro:bit
+firmware.  Factory or MakeCode firmware exposes different GATT services and
+will connect but fail to subscribe; the verbose log reports the missing
+0xf005 service.
+.PP
+The service listens on the loopback interface by default.  Exposing it on a
+non-loopback address is only safe on a trusted network.
+.SH SEE ALSO
+.BR systemctl (1),
+.BR bluetoothctl (1)
+.PP
+Project home page: https://github.com/yetist/scratch-link-gtk
+.SH BUGS
+Report bugs at https://github.com/yetist/scratch-link-gtk/issues

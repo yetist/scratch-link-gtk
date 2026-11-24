@@ -8,7 +8,7 @@
 <component type="desktop-application">
   <id>org.scratchlink.Gtk</id>
   <name>Scratch Link</name>
-  <summary>Connect Scratch to Bluetooth LE peripherals</summary>
+  <summary>Connect Scratch to Bluetooth LE and Classic peripherals</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
@@ -28,6 +28,11 @@
   </description>
 
   <launchable type="desktop-id">org.scratchlink.Gtk.desktop</launchable>
+
+  <url type="homepage">https://github.com/yetist/scratch-link-gtk</url>
+  <url type="bugtracker">https://github.com/yetist/scratch-link-gtk/issues</url>
+  <url type="vcs-browser">https://github.com/yetist/scratch-link-gtk</url>
+  <url type="contribute">https://github.com/yetist/scratch-link-gtk/blob/main/README.md</url>
 
   <developer id="org.scratchlink">
     <name>The scratch-link-gtk authors</name>
@@ -49,11 +54,19 @@
 
   <content_rating type="oars-1.1"/>
 
+  <screenshots>
+    <screenshot type="default">
+      <caption>Service status, adapter state and protocol log</caption>
+      <image type="source">https://raw.githubusercontent.com/yetist/scratch-link-gtk/main/data/screenshots/main-window.png</image>
+    </screenshot>
+  </screenshots>
+
   <releases>
-    <release version="0.1.0" date="2026-11-15">
+    <release version="0.1.0" date="2026-11-24">
       <description>
-        <p>First release: BLE discovery, GATT read/write, notifications and
-        disconnect handling.</p>
+        <p>First release: BLE discovery, GATT read/write, notifications,
+        disconnect handling, Bluetooth Classic (RFCOMM) sessions, a GTK status
+        window and a systemd user service.</p>
       </description>
     </release>
   </releases>

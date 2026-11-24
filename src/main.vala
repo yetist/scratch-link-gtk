@@ -36,8 +36,13 @@ const GLib.OptionEntry[] option_entries = {
 } // namespace ScratchLink
 
 int main (string[] args) {
+    // Use the application ID as the program name so X11 WM_CLASS and the
+    // Wayland app_id match the desktop file and the Flatpak app ID.
+    GLib.Environment.set_prgname (ScratchLink.APP_ID);
+    GLib.Environment.set_application_name ("Scratch Link");
+
     var context = new GLib.OptionContext ("— Scratch Link for Linux");
-    context.set_summary ("Local WebSocket bridge between Scratch and Bluetooth LE peripherals.");
+    context.set_summary ("Local WebSocket bridge between Scratch and Bluetooth peripherals.");
     context.add_main_entries (ScratchLink.option_entries, null);
 
     try {

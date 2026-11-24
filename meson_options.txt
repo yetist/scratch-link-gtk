@@ -2,3 +2,7 @@ option('appindicator',
   type: 'feature',
   value: 'auto',
   description: 'Build the optional tray icon with Ayatana AppIndicator')
+option('systemd',
+  type: 'boolean',
+  value: true,
+  description: 'Install the systemd user service')

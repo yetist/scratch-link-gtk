@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -Dsystemd=true
+
+override_dh_auto_test:
+	# The unit tests do not need a display or a Bluetooth adapter.
+	dh_auto_test
+
+override_dh_installsystemduser:
+	# Install the user unit but do not enable it: the GUI and the service
+	# share port 20111, so running both by default would conflict.
+	dh_installsystemduser --no-enable
